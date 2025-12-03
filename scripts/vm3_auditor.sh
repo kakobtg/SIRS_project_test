@@ -2,7 +2,7 @@
 # VM3 authorized third party (auditor) terminal: fetch share, verify, decrypt.
 set -euo pipefail
 
-API="${API:-http://dmz.example.com:8000}"   # Point to VM1 DMZ API
+API="${API:-http://10.0.0.10:8000}"   # Point to VM1 DMZ API (suggested IP plan)
 KEYS_DIR="${KEYS_DIR:-keys}"
 TX_ID="${TX_ID:-tx-001}"
 SELLER="${SELLER:-seller}"

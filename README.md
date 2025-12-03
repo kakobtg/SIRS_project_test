@@ -19,10 +19,16 @@ pip install -r requirements.txt psycopg2-binary
 ```
 
 ## FastAPI (DMZ) server
+Run from the repo root. If you use the script, set `APP_DIR` to this directory (defaults to `/opt/chainofproduct`, which may not exist).
 ```bash
-export COP_DB_URL=sqlite:///./cop.db  # dev
+export COP_DB_URL=sqlite:///./cop.db  # dev, in-repo SQLite
 # or PostgreSQL in 3-VM layout: postgresql+psycopg2://cop:cop@<vm2-ip>:5432/cop
+
+# Manual launch:
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# Or via script (from repo root):
+APP_DIR="$(pwd)" bash scripts/vm1_dmz_app.sh
 ```
 Endpoints: `POST /register_company`, `GET /companies/{name}`, `POST /transactions`, `GET /transactions/{tx_id}`, `POST /transactions/{tx_id}/buyer_sign`, `POST /transactions/{tx_id}/share`, `GET /transactions/{tx_id}/shares`.
 
@@ -37,27 +43,27 @@ Endpoints: `POST /register_company`, `GET /companies/{name}`, `POST /transaction
 
 ## 3-VM layout and step-by-step
 **Roles**
-- VM1 (DMZ): FastAPI app, exposed on 443/8000.
-- VM2 (DB): Postgres, only reachable from VM1 on 5432.
-- VM3 (Client): CLI/clients; only reaches VM1.
+- VM1 (DMZ): FastAPI app, exposed on 443/8000. Suggested IP: `10.0.0.10`.
+- VM2 (DB): Postgres, only reachable from VM1 on 5432. Suggested IP: `10.0.1.10`.
+- VM3 (Client): CLI/clients; only reaches VM1. Suggested IP: `10.0.2.10`.
 
-**VM2 (DB)**
+**VM2 (DB)** (from repo root)
 ```bash
 sudo bash scripts/vm2_db.sh   # starts Postgres in Docker bound locally; firewall allow only VM1 on 5432
 ```
 
-**VM1 (DMZ app)**
+**VM1 (DMZ app)** (from repo root; set APP_DIR)
 ```bash
-export COP_DB_URL=postgresql+psycopg2://cop:cop@<vm2-ip>:5432/cop
-bash scripts/vm1_dmz_app.sh   # starts FastAPI/uvicorn
+export COP_DB_URL=postgresql+psycopg2://cop:cop@10.0.1.10:5432/cop  # adjust if you pick different IPs
+APP_DIR="$(pwd)" bash scripts/vm1_dmz_app.sh   # starts FastAPI/uvicorn
 # For HTTPS: use uvicorn --ssl-keyfile/--ssl-certfile or front with nginx/HAProxy.
 ```
 
 **VM3 (Clients)**
-- Seller terminal: `bash scripts/vm3_seller.sh API=http://<vm1-ip>:8000`
-- Buyer terminal: `bash scripts/vm3_buyer.sh API=http://<vm1-ip>:8000`
-- Auditor terminal: `bash scripts/vm3_auditor.sh API=http://<vm1-ip>:8000`
-- Or single-script demo: `bash scripts/vm3_client_demo.sh API=http://<vm1-ip>:8000`
+- Seller terminal: `bash scripts/vm3_seller.sh API=http://10.0.0.10:8000`
+- Buyer terminal: `bash scripts/vm3_buyer.sh API=http://10.0.0.10:8000`
+- Auditor terminal: `bash scripts/vm3_auditor.sh API=http://10.0.0.10:8000`
+- Or single-script demo: `bash scripts/vm3_client_demo.sh API=http://10.0.0.10:8000`
 
 ## End-to-end flow (SR1–SR4)
 1) Seller protects `tx.json` (encrypts, wraps keys, signs) and uploads.  

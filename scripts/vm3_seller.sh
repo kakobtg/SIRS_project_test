@@ -2,7 +2,7 @@
 # VM3 seller terminal: generate seller/buyer keys if missing, protect and upload a transaction.
 set -euo pipefail
 
-API="${API:-http://dmz.example.com:8000}"   # Point to VM1 DMZ API
+API="${API:-http://10.0.0.10:8000}"   # Point to VM1 DMZ API (suggested IP plan)
 KEYS_DIR="${KEYS_DIR:-keys}"
 TX_FILE="${TX_FILE:-tx.json}"
 SELLER="${SELLER:-seller}"

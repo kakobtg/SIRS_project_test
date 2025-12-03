@@ -3,7 +3,8 @@
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-/opt/chainofproduct}"
-DB_HOST="${DB_HOST:-10.0.2.10}"  # Internal DB VM IP (example)
+# Suggested IP plan: VM1 (DMZ) 10.0.0.10, VM2 (DB) 10.0.1.10, VM3 (Client) 10.0.2.10
+DB_HOST="${DB_HOST:-10.0.1.10}"  # Internal DB VM IP (example)
 DB_URL="${COP_DB_URL:-postgresql+psycopg2://cop:cop@${DB_HOST}:5432/cop}"
 PORT="${PORT:-8000}"
 

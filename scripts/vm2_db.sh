@@ -6,6 +6,7 @@ CONTAINER_NAME="${CONTAINER_NAME:-cop-db}"
 DB_USER="${DB_USER:-cop}"
 DB_PASS="${DB_PASS:-cop}"
 DB_NAME="${DB_NAME:-cop}"
+# Suggested IP plan: VM2 (DB) at 10.0.1.10, only VM1 (10.0.0.10) allowed on 5432.
 LISTEN_IP="${LISTEN_IP:-127.0.0.1}" # Bind locally on the DB VM; firewall allows only VM1 to reach it.
 
 echo "[vm2] Starting Postgres container '${CONTAINER_NAME}'..."

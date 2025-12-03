@@ -2,7 +2,7 @@
 # VM3 (client) demo: run an end-to-end flow against the DMZ API.
 set -euo pipefail
 
-API="${API:-http://dmz.example.com:8000}" # Replace with VM1 address (443 if TLS terminated)
+API="${API:-http://10.0.0.10:8000}" # Default to suggested VM1 DMZ IP (443 if TLS terminated)
 KEYS_DIR="${KEYS_DIR:-keys}"
 TX_FILE="${TX_FILE:-tx.json}"
 TX_ID="${TX_ID:-tx-001}"
