@@ -1,0 +1,7 @@
+cryptography
+fastapi
+uvicorn
+requests
+sqlalchemy
+pydantic
+pytest

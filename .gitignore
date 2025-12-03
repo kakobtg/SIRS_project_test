@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.log
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Editor/OS
+.DS_Store
+.idea/
+.vscode/
+
+# Coverage/pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Databases
+cop.db
+
+# Keys and generated artifacts
+keys/
+protected.json
+buyer_signed.json
+buyer_plain.json
+auditor_plain.json
+share.json
+protected_tx.json
+
+# Docker
+*.pid
+
