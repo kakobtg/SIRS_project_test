@@ -8,6 +8,7 @@ Secure “Chain of Product” DvP transactions with client-side encryption/signi
 - **API:** FastAPI server storing protected transactions/share records; public-key registry via `/register_company` and `/companies/{name}`.
 - **Clients:** Seller/Buyer/Auditor scripts plus CLI.
 - **Scripts:** Helpers for DB (VM2), app (VM1), and client flows (VM3).
+- **Selective disclosure (Challenge B):** `protect_with_layers()` to encrypt per-section layers, `create_layer_share_records()` + `unprotect_layer()` for partial reveals, and a dedicated disclosure-tracking server (`disclosure_service`) with `scripts/disclosure_server.sh`.
 
 ## Install (per VM, Kali-friendly)
 ```bash
@@ -31,6 +32,13 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 APP_DIR="$(pwd)" bash scripts/vm1_dmz_app.sh
 ```
 Endpoints: `POST /register_company`, `GET /companies/{name}`, `POST /transactions`, `GET /transactions/{tx_id}`, `POST /transactions/{tx_id}/buyer_sign`, `POST /transactions/{tx_id}/share`, `GET /transactions/{tx_id}/shares`.
+
+### Disclosure tracker (sections)
+A separate FastAPI service tracks which document sections have been disclosed to which partners.
+```bash
+COP_DISCLOSURE_DB_URL=sqlite:///./disclosures.db APP_DIR="$(pwd)" bash scripts/disclosure_server.sh
+# Runs on 8100 by default; endpoints: POST /disclosures, GET /disclosures/{tx_id}?section=...
+```
 
 ## CLI basics (`python -m chainofproduct.cli`)
 - Generate keys: `python -m chainofproduct.cli --keys-dir keys generate-keys seller`

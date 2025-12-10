@@ -17,6 +17,7 @@ class TransactionRecord(Base):
     sig_buyer = Column(Text, nullable=True)
     meta = Column(Text, nullable=True)
     created_at = Column(String, nullable=True)
+    layers = Column(Text, nullable=True)  # JSON string for selective disclosure layers
 
 
 class ShareRecord(Base):

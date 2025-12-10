@@ -37,6 +37,7 @@ class TransactionIn(BaseModel):
     sig_buyer: str | None = None
     meta: dict | None = None
     created_at: str | None = None
+    layers: dict | None = None
 
 
 class BuyerSignIn(BaseModel):
@@ -71,6 +72,7 @@ def _tx_to_dict(tx: models.TransactionRecord) -> dict:
         "sig_buyer": tx.sig_buyer,
         "meta": json.loads(tx.meta) if tx.meta else None,
         "created_at": tx.created_at,
+        "layers": json.loads(tx.layers) if tx.layers else None,
     }
 
 
@@ -129,6 +131,7 @@ def create_transaction(payload: TransactionIn, db: Session = Depends(get_db)):
         sig_buyer=payload.sig_buyer,
         meta=json.dumps(payload.meta) if payload.meta else None,
         created_at=payload.created_at,
+        layers=json.dumps(payload.layers) if payload.layers else None,
     )
     db.add(tx)
     db.commit()
